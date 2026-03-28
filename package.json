@@ -1,0 +1,21 @@
+{
+  "name": "cannabis-real-estate-brokers",
+  "version": "1.0.0",
+  "description": "Cannabis Real Estate Brokers — Professional Cannabis Property Marketplace",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3002",
+    "build": "vite build",
+    "preview": "vite preview --port 3002"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "lucide-react": "^0.294.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.0",
+    "vite": "^5.0.0"
+  }
+}
