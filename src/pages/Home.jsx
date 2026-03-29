@@ -309,7 +309,7 @@ function AudienceCard({ card: c }) {
   );
 }
 
-
+export function PropertyCard({ property: p }) {
   const dealBadge = {
     lease:          { label: 'For Lease',      cls: 'badge-green' },
     purchase:       { label: 'For Sale',       cls: 'badge-amber' },
