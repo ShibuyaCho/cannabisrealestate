@@ -185,53 +185,7 @@ export default function HomePage() {
       {/* ── FOR OWNERS / FOR TENANTS ── */}
       <section style={{ padding: '80px 0', background: 'var(--char-2)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-            <div className="card" style={{ padding: 36 }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'var(--green-faint)', border: '1px solid rgba(22,163,74,0.25)', borderRadius: 5, padding: '5px 12px', fontSize: 11, color: 'var(--green-lt)', fontWeight: 600, fontFamily: 'Geist Mono', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 20 }}>
-                <Building2 size={11}/> For Property Owners
-              </div>
-              <h3 style={{ fontSize: 24, marginBottom: 14, color: 'var(--cream)' }}>List Your Cannabis Property</h3>
-              <p style={{ fontSize: 14, color: 'var(--text-2)', lineHeight: 1.8, marginBottom: 22 }}>
-                Reach qualified cannabis operators actively looking for space. Every offer arrives with a signed NDA and completed LOI — no chasing tenants or buyers for paperwork.
-              </p>
-              {[
-                '10-minute property listing form',
-                'All 4 deal types supported',
-                'Zoning and CUP details shown upfront',
-                'Every offer comes with signed NDA + LOI',
-                '2% platform fee — paid only at close',
-              ].map(i => (
-                <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 11, alignItems: 'flex-start' }}>
-                  <CheckCircle size={14} style={{ color: 'var(--green-lt)', marginTop: 2, flexShrink: 0 }} />
-                  <span style={{ fontSize: 13.5, color: 'var(--text-2)' }}>{i}</span>
-                </div>
-              ))}
-              <Link to="/list" className="btn btn-primary" style={{ marginTop: 24 }}>List a Property <ArrowRight size={15}/></Link>
-            </div>
-
-            <div className="card" style={{ padding: 36 }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: 'var(--amber-dim)', border: '1px solid rgba(217,119,6,0.25)', borderRadius: 5, padding: '5px 12px', fontSize: 11, color: 'var(--amber-lt)', fontWeight: 600, fontFamily: 'Geist Mono', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 20 }}>
-                <Search size={11}/> For Operators & Buyers
-              </div>
-              <h3 style={{ fontSize: 24, marginBottom: 14, color: 'var(--cream)' }}>Find Your Next Location</h3>
-              <p style={{ fontSize: 14, color: 'var(--text-2)', lineHeight: 1.8, marginBottom: 22 }}>
-                Every listing shows zoning status, cannabis permitting notes, and deal structure before you waste time on due diligence. Submit an offer and get all contracts instantly.
-              </p>
-              {[
-                'Filter by deal type, state, property type',
-                'Zoning status and CUP requirements shown',
-                'Free NDA download before committing',
-                'All contracts generated on offer submit',
-                'Track from LOI to keys in hand',
-              ].map(i => (
-                <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 11, alignItems: 'flex-start' }}>
-                  <CheckCircle size={14} style={{ color: 'var(--amber-lt)', marginTop: 2, flexShrink: 0 }} />
-                  <span style={{ fontSize: 13.5, color: 'var(--text-2)' }}>{i}</span>
-                </div>
-              ))}
-              <Link to="/properties" className="btn btn-outline-green" style={{ marginTop: 24 }}>Browse Properties <ArrowRight size={15}/></Link>
-            </div>
-          </div>
+          <AudienceCards />
         </div>
       </section>
 
@@ -253,7 +207,109 @@ export default function HomePage() {
   );
 }
 
-export function PropertyCard({ property: p }) {
+// ── Audience Cards — grid on desktop, swipeable carousel on mobile ────────────
+function AudienceCards() {
+  const [active, setActive] = useState(0);
+
+  const cards = [
+    {
+      badge: { bg: 'var(--green-faint)', border: 'rgba(22,163,74,0.25)', color: 'var(--green-lt)', icon: <Building2 size={11}/>, label: 'For Property Owners' },
+      title: 'List Your Cannabis Property',
+      desc: 'Reach qualified cannabis operators actively looking for space. Every offer arrives with a signed NDA and completed LOI — no chasing tenants or buyers for paperwork.',
+      items: ['10-minute property listing form', 'All 4 deal types supported', 'Zoning and CUP details shown upfront', 'Every offer comes with signed NDA + LOI', '2% platform fee — paid only at close'],
+      checkColor: 'var(--green-lt)',
+      cta: { to: '/list', label: 'List a Property', cls: 'btn-primary' },
+    },
+    {
+      badge: { bg: 'var(--amber-dim)', border: 'rgba(217,119,6,0.25)', color: 'var(--amber-lt)', icon: <Search size={11}/>, label: 'For Operators & Buyers' },
+      title: 'Find Your Next Location',
+      desc: 'Every listing shows zoning status, cannabis permitting notes, and deal structure before you waste time on due diligence. Submit an offer and get all contracts instantly.',
+      items: ['Filter by deal type, state, property type', 'Zoning status and CUP requirements shown', 'Free NDA download before committing', 'All contracts generated on offer submit', 'Track from LOI to keys in hand'],
+      checkColor: 'var(--amber-lt)',
+      cta: { to: '/properties', label: 'Browse Properties', cls: 'btn-outline-green' },
+    },
+  ];
+
+  return (
+    <>
+      {/* ── Desktop: side-by-side grid ── */}
+      <div className="audience-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+        {cards.map(c => <AudienceCard key={c.title} card={c} />)}
+      </div>
+
+      {/* ── Mobile: carousel ── */}
+      <div className="audience-carousel">
+        {/* Dot tabs */}
+        <div style={{ display: 'flex', gap: 10, marginBottom: 20, justifyContent: 'center' }}>
+          {cards.map((c, i) => (
+            <button key={i} onClick={() => setActive(i)} style={{
+              padding: '7px 20px', borderRadius: 20, fontSize: 12, fontWeight: 600,
+              fontFamily: 'Geist Mono', textTransform: 'uppercase', letterSpacing: '0.4px',
+              cursor: 'pointer', border: 'none', transition: 'all 0.2s',
+              background: active === i ? (i === 0 ? 'var(--green)' : 'var(--amber)') : 'var(--char-3)',
+              color: active === i ? '#fff' : 'var(--text-3)',
+            }}>
+              {i === 0 ? 'List' : 'Find'}
+            </button>
+          ))}
+        </div>
+
+        {/* Slide track */}
+        <div style={{ overflow: 'hidden', borderRadius: 13 }}>
+          <div style={{ display: 'flex', transition: 'transform 0.35s cubic-bezier(0.4,0,0.2,1)', transform: `translateX(-${active * 100}%)` }}>
+            {cards.map(c => (
+              <div key={c.title} style={{ minWidth: '100%' }}>
+                <AudienceCard card={c} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Swipe hint dots */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 16 }}>
+          {cards.map((_, i) => (
+            <div key={i} onClick={() => setActive(i)} style={{
+              width: active === i ? 20 : 6, height: 6, borderRadius: 3,
+              background: active === i ? 'var(--green)' : 'var(--border-lt)',
+              cursor: 'pointer', transition: 'all 0.3s',
+            }}/>
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        .audience-carousel { display: none; }
+        @media (max-width: 768px) {
+          .audience-grid     { display: none !important; }
+          .audience-carousel { display: block; }
+        }
+      `}</style>
+    </>
+  );
+}
+
+function AudienceCard({ card: c }) {
+  return (
+    <div className="card" style={{ padding: 32 }}>
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: c.badge.bg, border: `1px solid ${c.badge.border}`, borderRadius: 5, padding: '5px 12px', fontSize: 11, color: c.badge.color, fontWeight: 600, fontFamily: 'Geist Mono', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 18 }}>
+        {c.badge.icon} {c.badge.label}
+      </div>
+      <h3 style={{ fontSize: 22, marginBottom: 12, color: 'var(--cream)' }}>{c.title}</h3>
+      <p style={{ fontSize: 14, color: 'var(--text-2)', lineHeight: 1.8, marginBottom: 20 }}>{c.desc}</p>
+      {c.items.map(i => (
+        <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'flex-start' }}>
+          <CheckCircle size={14} style={{ color: c.checkColor, marginTop: 2, flexShrink: 0 }} />
+          <span style={{ fontSize: 13.5, color: 'var(--text-2)' }}>{i}</span>
+        </div>
+      ))}
+      <Link to={c.cta.to} className={`btn ${c.cta.cls}`} style={{ marginTop: 22 }}>
+        {c.cta.label} <ArrowRight size={15}/>
+      </Link>
+    </div>
+  );
+}
+
+
   const dealBadge = {
     lease:          { label: 'For Lease',      cls: 'badge-green' },
     purchase:       { label: 'For Sale',       cls: 'badge-amber' },
